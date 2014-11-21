@@ -1,6 +1,10 @@
 from __future__ import division
 import sys
 from instagram.client import InstagramAPI
+from urllib2 import Request, urlopen, URLError
+import json
+from pprint import pprint
+
 
 THRESHOLD = 4
 
@@ -49,6 +53,28 @@ def sanitize_locations(locations):
 	filter_locations()
 	return master
 
+def determine_city(clusters):
+	cities = []
+	for location in clusters:
+		lat = location[0]
+		lng = location[1]
+		request = Request("https://maps.googleapis.com/maps/api/geocode/json?latlng="
+			+ str(lat)
+			+ ","
+			+ str(lng)
+			+ "&key=AIzaSyCyjoz5Fhu26s6B6GK6k5ImZxMAkSdxL6E")
+		try:
+			response = urlopen(request)
+			address_data = response.read()
+			data = json.loads(address_data)
+			city = data["results"][0]["formatted_address"].split(",")[-3]
+			if not city in cities:
+				print city
+				cities.append(city)
+		except:
+		    pass
+
 if __name__ == "__main__":
-	locations = construct_location_data(39712567)
-	print sanitize_locations(locations)
+	locations = construct_location_data(23983519)
+	clusters = sanitize_locations(locations)
+	determine_city(clusters)
