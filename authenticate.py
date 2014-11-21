@@ -1,7 +1,7 @@
 import sys
 from instagram.client import InstagramAPI
 
-access_token = "39712567.f589aa9.6f2db3e548e141ebac0e795574922ef6"
+access_token = open("token.txt").read()
 api = InstagramAPI(access_token=access_token)
 
 def construct_location_data(user):
