@@ -28,17 +28,19 @@ def construct_location_data(user):
 	except:
 		return "You don't have permission to follow user with id: " + str(user)
 
+# def average_location_list(locations):
+# 	""" averages a list of location tuples """
+# 	return tuple(map(lambda elt: sum(elt) / float(len(elt)), zip(*locations)))
+
+# def is_location_nearby(element, pivot, threshold):
+# 	""" checks if a location is near another location based on threshold """
+# 	lat_difference = abs(pivot[0] - element[0])
+# 	lng_difference = abs(pivot[1] - element[1])
+# 	within_threshold = lat_difference < threshold and lng_difference < threshold
+# 	return True if within_threshold else False
+
 # def sanitize_locations(locations):
 # 	""" consolidates (lat, lng) tuples based on a threshold """
-# 	def average_location_list(locations):
-# 		""" averages a list of location tuples """
-# 		return tuple(map(lambda elt: sum(elt) / float(len(elt)), zip(*locations)))
-# 	def is_location_nearby(element, pivot, threshold):
-# 		""" checks if a location is near another location based on threshold """
-# 		lat_difference = abs(pivot[0] - element[0])
-# 		lng_difference = abs(pivot[1] - element[1])
-# 		within_threshold = lat_difference < threshold and lng_difference < threshold
-# 		return True if within_threshold else False
 # 	master = []
 # 	def filter_locations():
 # 		nearby = []
@@ -56,19 +58,23 @@ def construct_location_data(user):
 def determine_city(clusters):
 	cities = []
 	for location in clusters:
-		lat = location[0]
-		lng = location[1]
+		lat = str(location[0])
+		lng = str(location[1])
+		key = "AIzaSyCyjoz5Fhu26s6B6GK6k5ImZxMAkSdxL6E"
 		request = Request("https://maps.googleapis.com/maps/api/geocode/json?latlng="
-			+ str(lat)
+			+ lat
 			+ ","
-			+ str(lng)
-			+ "&key=AIzaSyCyjoz5Fhu26s6B6GK6k5ImZxMAkSdxL6E")
+			+ lng
+			+ "&key="
+			+ key)
 		try:
 			response = urlopen(request)
 			address_data = response.read()
 			data = json.loads(address_data)
 			city = data["results"][0]["formatted_address"].split(",")[-3]
 			city = str(city).strip()
+			""" TODO: super inefficient way of grouping cities because
+				it hits google's endpoint far too many times """
 			if not any(city in locations for locations in cities):
 				cities.append((city, 1))
 			else:
