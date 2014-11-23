@@ -1,2 +1,4 @@
 1. We first find all the ids of the users we follow
-2. TODO Then we make a guess as to where each one lives
+2. Then we make a guess as to where each one lives
+3. TODO: Create CSV for ID, Username, Hometown
+4. TODO: Look through CSV and compare Thanksgiving-day posts to guessed hometown, Cambridge, Boston
