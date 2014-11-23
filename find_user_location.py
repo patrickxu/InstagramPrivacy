@@ -10,7 +10,7 @@ from operator import itemgetter
 THRESHOLD = 1
 CLIENT_ID = 1570583193
 
-access_token = "39712567.f589aa9.6f2db3e548e141ebac0e795574922ef6"
+access_token = open("token.txt").read()
 api = InstagramAPI(access_token=access_token)
 
 def find_users_we_follow():
