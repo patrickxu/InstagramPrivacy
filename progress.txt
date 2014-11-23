@@ -1,0 +1,2 @@
+1. We first find all the ids of the users we follow
+2. TODO Then we make a guess as to where each one lives
