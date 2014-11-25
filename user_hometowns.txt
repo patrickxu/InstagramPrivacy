@@ -1,0 +1,6 @@
+username	hometown
+1	San Francisco, CA
+diana_s_018	20141 Milano, Italy
+tripwalk	Cundinamarca, Colombia
+dontbesillyhali	San Diego, CA
+oh_livz	Millbrae, CA
