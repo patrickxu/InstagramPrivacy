@@ -99,6 +99,8 @@ def query_city(location):
 		+ lat
 		+ ","
 		+ lng
+		# added locality for easier parsing
+		+ "&result_type=locality"
 		+ "&key="
 		+ key)
 	try:
@@ -106,14 +108,18 @@ def query_city(location):
 		address_data = response.read()
 		data = json.loads(address_data)
 		results = data["results"][0]["formatted_address"]
+		components = data["results"][0]["address_components"]
 		if ', USA' in results:
 			state = ' '.join(results.split(",")[-2].strip().split(" ")[:-1])
-			city = results.split(",")[-3]
+			# city = results.split(",")[-3]
+			city = components[0]["long_name"]
 		else:
 			split_res = results.split(',')
 			state = split_res[-1]
 			city = split_res[-2]
 		city = str(city).strip() + ', ' + state.strip()
+		city = [0]["long_name"]
+		city = str(city).strip()
 		return city
 	except Exception as e:
 		print "Can't get city from tuple..." + str(e)
