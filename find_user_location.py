@@ -155,18 +155,32 @@ def query_city(location):
 
 """
 	Parameters: list of lists, with each list being a cluster
-	Function: Takes each "cluster", calculates city, state associate with cluster 
+	Function: Takes each "cluster", calculates (city, state) associated with cluster 
 				and the number of pictures associated with the location
-	Returns: dictionary with city, state keys, and number of occurrences for value
+	Returns: dictionary with (city, state) keys, and number of occurrences for value
 """
 def construct_city_mapping(list_of_clusters):
 	city_map = {}
-	for cluster in list_of_clusters:
-		average_location = average_location_list(cluster)
-		city_name = query_city(average_location)
-		num_occurences = len(cluster)
-		city_map[city_name] = num_occurences
+	max_city = max(list_of_clusters, key = len)
+	max_city_occurences = len(max_city)
+	max_city_average = average_location_list(max_city)
+	city_name = query_city(max_city_average)
+	if city_name in ["Cambridge, MA", "Mid-Cambridge, MA"]:
+		list_of_clusters.remove(max_city)
+		second_max_city = max(list_of_clusters, key = len)
+		second_max_city_occurences = len(second_max_city)
+		second_max_city_average = average_location_list(second_max_city)
+		second_city_name = query_city(second_max_city_average)
+		city_map[second_city_name] = second_max_city_occurences
+	else:
+		city_map[city_name] = max_city_occurences
 	return city_map
+	# for cluster in list_of_clusters:
+	# 	average_location = average_location_list(cluster)
+	# 	city_name = query_city(average_location)
+	# 	num_occurences = len(cluster)
+	# 	city_map[city_name] = num_occurences
+	# return city_map
 
 """
 	Parameters: Takes a dictionary that has location keys and number of occurrences values
@@ -196,9 +210,9 @@ def construct_id_home_mapping(idlist, f):
 			locations = construct_location_data(userid)
 			clusters = create_clusters(locations)
 			city_map = construct_city_mapping(clusters)
-			home = find_user_home(city_map)
-			print user_tuple[1], home
-			to_write = user_tuple[1] + '\t' + home + '\n'
+			# home = find_user_home(city_map)
+			print user_tuple[1], city_map.keys()[0]
+			to_write = user_tuple[1] + '\t' + city_map.keys()[0] + '\n'
 			f.write(to_write)
 			# coordinates = construct_location_data(user)
 			# unique_locations = find_frequented_cities(coordinates)
@@ -216,10 +230,6 @@ if __name__ == "__main__":
 	f.write('username\thometown\n')
 	# construct_id_home_mapping(['415272494'], f)
 	idlist = find_users_we_follow()
-	construct_id_home_mapping(idlist[:2], f)
+	construct_id_home_mapping(idlist[:20], f)
 	f.close()
-
-
-
-
 

@@ -1,6 +1,9 @@
 username	hometown
-1	San Francisco, CA
-diana_s_018	20141 Milano, Italy
-tripwalk	Cundinamarca, Colombia
+danthuyc	Miami, FL
+wharton23	San Francisco, CA
+avisaraf	Edison, NJ
+diana_s_018	Milan, IT
+tripwalk	Bogota, CO
 dontbesillyhali	San Diego, CA
-oh_livz	Millbrae, CA
+oh_livz	San Francisco International Airport, US
+anniemorefield	East Hampton, Suffolk County
