@@ -1,4 +1,5 @@
-1. We first find all the ids of the users we follow
-2. Then we make a guess as to where each one lives
-3. TODO: Create CSV for ID, Username, Hometown
-4. TODO: Look through CSV and compare Thanksgiving-day posts to guessed hometown, Cambridge, Boston
+* We first find all the ids of the users we follow
+* Then we make a guess as to where each one lives
+	* TODO: Parse Google's Geolocation JSON response better so it returns city every time...
+* TODO: Create CSV for ID, Username, Hometown
+* TODO: Look through CSV and compare Thanksgiving-day posts to guessed hometown, Cambridge, Boston
