@@ -85,13 +85,17 @@ def query_city(location):
 		+ lat
 		+ ","
 		+ lng
+		# added locality for easier parsing
+		+ "&result_type=locality"
 		+ "&key="
 		+ key)
 	try:
 		response = urlopen(request)
 		address_data = response.read()
 		data = json.loads(address_data)
-		city = data["results"][0]["formatted_address"].split(",")[-3]
+		pprint(data)
+		# city = data["results"][0]["formatted_address"].split(",")[-3]
+		city = data["results"][0]["address_components"][0]["long_name"]
 		city = str(city).strip()
 		return city
 	except Exception as e:
@@ -119,7 +123,7 @@ def find_user_home(city_map):
 def construct_id_home_mapping(idlist):
 	mapping = {}
 	for user_tuple in idlist:
-		print "Attemping to construct map for user ", user_tuple, "..."
+		# print "Attemping to construct map for user ", user_tuple, "..."
 		try:
 			userid = user_tuple[0]
 			locations = construct_location_data(userid)
@@ -127,10 +131,6 @@ def construct_id_home_mapping(idlist):
 			city_map = construct_city_mapping(clusters)
 			home = find_user_home(city_map)
 			print user_tuple[1], home
-			# coordinates = construct_location_data(user)
-			# unique_locations = find_frequented_cities(coordinates)
-			# home = find_user_home(unique_locations)
-			# mapping[user] = home
 		except Exception as e:
 			# print "Master error..." + str(e)
 			pass
