@@ -27,88 +27,74 @@ def find_users_we_follow():
 			ids.append((userid, username))
 	return ids
 
-# returns a list of (lat, lng) tuples associated with a given id medi
+# returns a list of (lat, lng) tuples associated with a given id 
 def construct_location_data(user):
 	""" constructs every available (lat, lng) tuple for a given user """
 	location_list = []
 	try:
+		# scrape all media (picture or video) from a given user
 		recent_media, next_ = IGapi.user_recent_media(user_id=user, count=sys.maxint)
-		for index, media in enumerate(recent_media):
+		for media in recent_media:
+			# try to get location data from a piece of media, if available
 			try:
 		   		latitude = media.location.point.latitude
 		   		longitude = media.location.point.longitude
 	   			location_list.append((latitude, longitude))
 			except Exception as e:
-				# print "Can't get lat or lng..." + str(e)
 				pass
+		# sometimes media JSON has empty lat, lng fields, so we need to check
 		if location_list == []:
 			return "No location data available for user with id: " + user
 		else:
 			return location_list
 	except Exception as e:
-		return "You don't have permissions to view media from user with id: " + user + "\n" + str(e)
-		# pass
+		pass
 
+# returns True if two location tuples are nearby, else False
 def is_location_nearby(element1, element2, threshold):
-	""" checks if a location is near another location based on threshold """
+	""" checks if two (lat, lng) tuples are close based on 
+		a global THRESHOLD value """
 	lat_difference = abs(element2[0] - element1[0])
 	lng_difference = abs(element2[1] - element1[1])
 	within_threshold = lat_difference < threshold and lng_difference < threshold
-	if within_threshold:
-		return True
-	else:
-		return False
+	return True if within_threshold else False
 
-"""I'm not sure that this function is necessary? I changed cluster()
-so that it doesn't use this function """
-def is_location_in_array(element, coordinates, threshold):
-	unique = False
-	for coordinate in coordinates:
-		if is_location_nearby(element, coordinate, threshold):
-			unique = True
-	return unique
+# returns the averaged location list
+def average_location_list(locations):
+	""" averages a list of (lat, lng) coordinates 
+		for use in clustering """
+	return tuple(map(lambda elt: sum(elt) / float(len(elt)), zip(*locations)))
 
-"""
-	Parameters: Takes in a list of coordinates
-	Function: calculates all points in list of coordinates that are within_threshold
-				a certain threshold of the first coordinate
-	Returns: A list of these coordinates that can be "clustered" with the first coordinate
-"""
+# returns a list of lists of (lat, lng) tuples that are relatively close to each other
 def cluster(list_of_coordinates):
+	""" takes in a list of coordinates--(lat, lng) tuples--and sorts
+		tuples into sublists based on global THRESHOLD value """
 	clustered_list = []
+	# append a coordinate to pivot around, and remove it from the list
 	clustered_list.append(list_of_coordinates[0])
 	list_of_coordinates.remove(list_of_coordinates[0])
 	count = 0
+	# while we still have coordinates to sort
 	while count < len(list_of_coordinates):
 		pair = list_of_coordinates[count]
+		# to compare coordinates, average coordinate sublist to create estimate
 		average_location = average_location_list(clustered_list)
-		# if is_location_in_array(pair, clustered_list[0], THRESHOLD):
+		# if we have a match, add it to the sublist
 		if is_location_nearby(pair, average_location, THRESHOLD):
 			clustered_list.append(pair)
 			del list_of_coordinates[count]
 		else:
-			count = count + 1
+			count += 1
 	return clustered_list
 
-"""
-	Parameters: Takes in a list of coordinates
-	Function: calculates a list of lists, each being a cluster
-	Returns: a list of lists, with each list being a cluster
-"""
+# returns a list of lists of clusters that are closeby
 def create_clusters(list_of_coordinates):
-	master = []
+	""" uses the cluster() method to calculate the two-dimensional
+		cluster sublist """
+	cluster_lists = []
 	while (not list_of_coordinates == []):
-		master.append(cluster(list_of_coordinates))
-	return master
-
-"""
-	Parameters: Takes in a list of coordinates
-	Function: Calculates the average of these coordinates
-	Returns: Average of the coordinates
-"""
-def average_location_list(locations):
-	""" averages a list of location tuples """
-	return tuple(map(lambda elt: sum(elt) / float(len(elt)), zip(*locations)))
+		cluster_lists.append(cluster(list_of_coordinates))
+	return cluster_lists
 
 """
 	Parameters: Takes in a lat-long coordinate
@@ -120,8 +106,8 @@ def query_city(location):
 	lng = str(location[1])
 	#NoahKey
 	#key = "AIzaSyCyjoz5Fhu26s6B6GK6k5ImZxMAkSdxL6E"
-	# key = "AIzaSyB7ZZTzG8-hhXKpCbuYbRinFb18mrMV55c"
-	key = "AIzaSyAaJpkAmGeVO1qrmTb-qGrDCRAJxs8NjTk"
+	key = "AIzaSyB7ZZTzG8-hhXKpCbuYbRinFb18mrMV55c"
+	#key = "AIzaSyAaJpkAmGeVO1qrmTb-qGrDCRAJxs8NjTk"
 	request = Request("https://maps.googleapis.com/maps/api/geocode/json?latlng="
 		+ lat
 		+ ","

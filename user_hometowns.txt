@@ -1,6 +1,3 @@
 username	hometown
 frankiekwuaz	Boston, MA
 danthuyc	Miami, FL
-wharton23	San Francisco, CA
-avisaraf	Edison, NJ
-diana_s_018	Milan, IT
