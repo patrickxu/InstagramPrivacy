@@ -55,6 +55,8 @@ def is_location_nearby(element1, element2, threshold):
 	else:
 		return False
 
+"""I'm not sure that this function is necessary? I changed cluster()
+so that it doesn't use this function """
 def is_location_in_array(element, coordinates, threshold):
 	unique = False
 	for coordinate in coordinates:
@@ -62,6 +64,12 @@ def is_location_in_array(element, coordinates, threshold):
 			unique = True
 	return unique
 
+"""
+	Parameters: Takes in a list of coordinates
+	Function: calculates all points in list of coordinates that are within_threshold
+				a certain threshold of the first coordinate
+	Returns: A list of these coordinates that can be "clustered" with the first coordinate
+"""
 def cluster(list_of_coordinates):
 	clustered_list = []
 	clustered_list.append(list_of_coordinates[0])
@@ -78,16 +86,31 @@ def cluster(list_of_coordinates):
 			count = count + 1
 	return clustered_list
 
+"""
+	Parameters: Takes in a list of coordinates
+	Function: calculates a list of lists, each being a cluster
+	Returns: a list of lists, with each list being a cluster
+"""
 def create_clusters(list_of_coordinates):
 	master = []
 	while (not list_of_coordinates == []):
 		master.append(cluster(list_of_coordinates))
 	return master
 
+"""
+	Parameters: Takes in a list of coordinates
+	Function: Calculates the average of these coordinates
+	Returns: Average of the coordinates
+"""
 def average_location_list(locations):
 	""" averages a list of location tuples """
 	return tuple(map(lambda elt: sum(elt) / float(len(elt)), zip(*locations)))
 
+"""
+	Parameters: Takes in a lat-long coordinate
+	Function: Uses API to return city, state for lat-long coordinate
+	Returns: City, state string
+"""
 def query_city(location):
 	lat = str(location[0])
 	lng = str(location[1])
@@ -109,22 +132,33 @@ def query_city(location):
 		data = json.loads(address_data)
 		results = data["results"][0]["formatted_address"]
 		components = data["results"][0]["address_components"]
-		if ', USA' in results:
-			state = ' '.join(results.split(",")[-2].strip().split(" ")[:-1])
+		# pprint(components)
+		city = components[0]["long_name"]
+		if components[-1]["short_name"] == u'US':
+			# state = ' '.join(results.split(",")[-2].strip().split(" ")[:-1])
 			# city = results.split(",")[-3]
-			city = components[0]["long_name"]
+			state = components[2]["short_name"]
 		else:
-			split_res = results.split(',')
-			state = split_res[-1]
-			city = split_res[-2]
-		city = str(city).strip() + ', ' + state.strip()
-		city = [0]["long_name"]
-		city = str(city).strip()
-		return city
+			# split_res = results.split(',')
+			state = components[-1]["short_name"]
+			if state.isnumeric():
+				state = components[-2]["short_name"]
+			# city = split_res[-2]
+		whole = str(city).strip() + ', ' + state.strip()
+		print whole
+		# city = [0]["long_name"]
+		# city = str(city).strip()
+		return whole
 	except Exception as e:
 		print "Can't get city from tuple..." + str(e)
 		# pass
 
+"""
+	Parameters: list of lists, with each list being a cluster
+	Function: Takes each "cluster", calculates city, state associate with cluster 
+				and the number of pictures associated with the location
+	Returns: dictionary with city, state keys, and number of occurrences for value
+"""
 def construct_city_mapping(list_of_clusters):
 	city_map = {}
 	for cluster in list_of_clusters:
@@ -134,6 +168,11 @@ def construct_city_mapping(list_of_clusters):
 		city_map[city_name] = num_occurences
 	return city_map
 
+"""
+	Parameters: Takes a dictionary that has location keys and number of occurrences values
+	Function: Calculates the city with most occurrences that is not Cambridge, MA
+	Returns: string of city with most occurrences that is not Cambridge, MA
+"""
 def find_user_home(city_map):
 	max_city = max(city_map.iteritems(), key=itemgetter(1))[0]
 	max_occurences = max(city_map.iteritems(), key=itemgetter(1))[1]
@@ -143,6 +182,11 @@ def find_user_home(city_map):
 	else:
 		return max_city
 
+"""
+	Parameters: list of ids and a filename
+	Function: Calculates the assumed hometown for each of these users, and writes all username-hometown tuples to a txt file
+	Returns: Dictionary that has username as key, and hometown as value.
+"""
 def construct_id_home_mapping(idlist, f):
 	mapping = {}
 	for user_tuple in idlist:
@@ -170,9 +214,9 @@ if __name__ == "__main__":
 	# print len(create_clusters(check))
 	f = open('user_hometowns.txt', 'w')
 	f.write('username\thometown\n')
-	construct_id_home_mapping(['415272494'], f)
+	# construct_id_home_mapping(['415272494'], f)
 	idlist = find_users_we_follow()
-	construct_id_home_mapping(idlist[:4], f)
+	construct_id_home_mapping(idlist[:2], f)
 	f.close()
 
 
