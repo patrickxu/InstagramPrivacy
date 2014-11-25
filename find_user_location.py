@@ -9,27 +9,31 @@ from operator import itemgetter
 THRESHOLD = .3
 CLIENT_ID = 1570583193
 
+# authenticate with IG
 access_token = open("token.txt").read()
-api = InstagramAPI(access_token=access_token)
+IGapi = InstagramAPI(access_token=access_token)
 
-# use Instagram API to get all the users tom_hammons follows
-# RETURNS: list of ids we follow
+# returns a list of ids
 def find_users_we_follow():
+	""" uses the IG API to scrape all id's that our fake account follows """
 	ids = []
-	followed_users = api.user_follows(CLIENT_ID, as_generator=True)
-	for index, page in enumerate(followed_users):
-		for counter, user in enumerate(page[0]):
+	followed_users = IGapi.user_follows(CLIENT_ID, as_generator=True)
+	# IG returns 50 users at a time which we have to paginate through
+	for page in followed_users:
+		for user in page[0]:
+			# strip the username and id and convert to ASCII
 			username =  str(user).strip("User: ")
-			ids.append((user.id.encode('utf8'), username))
+			userid = str(user.id)
+			ids.append((userid, username))
 	return ids
 
+# returns a list of (lat, lng) tuples associated with a given id medi
 def construct_location_data(user):
-	""" constructs every possible (lat, long) tuple for a given user """
+	""" constructs every available (lat, lng) tuple for a given user """
 	location_list = []
 	try:
-		recent_media, next_ = api.user_recent_media(user_id=user, count=sys.maxint)
+		recent_media, next_ = IGapi.user_recent_media(user_id=user, count=sys.maxint)
 		for index, media in enumerate(recent_media):
-		   	# print "Caption " + str(index) + ": ", media.caption.text
 			try:
 		   		latitude = media.location.point.latitude
 		   		longitude = media.location.point.longitude
@@ -145,7 +149,7 @@ def query_city(location):
 				state = components[-2]["short_name"]
 			# city = split_res[-2]
 		whole = str(city).strip() + ', ' + state.strip()
-		print whole
+		# print whole
 		# city = [0]["long_name"]
 		# city = str(city).strip()
 		return whole
@@ -230,6 +234,6 @@ if __name__ == "__main__":
 	f.write('username\thometown\n')
 	# construct_id_home_mapping(['415272494'], f)
 	idlist = find_users_we_follow()
-	construct_id_home_mapping(idlist[:20], f)
+	construct_id_home_mapping(idlist[:5], f)
 	f.close()
 
