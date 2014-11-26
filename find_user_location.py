@@ -167,7 +167,7 @@ def construct_city_mapping(list_of_clusters):
 	return city_map
 
 # returns a dictionary that maps username to home
-def construct_id_home_mapping(idlist, f):
+def construct_id_home_mapping(idlist, csvfile):
 	""" guesses the hometown for each user and writes info to a txt file """
 	mapping = {}
 	# attempts to make a home guess for each user
@@ -179,8 +179,9 @@ def construct_id_home_mapping(idlist, f):
 			clusters = create_clusters(locations)
 			city_map = construct_city_mapping(clusters)
 			print user_tuple[1], city_map.keys()[0]
-			to_write = user_tuple[1] + '\t' + city_map.keys()[0] + '\n'
-			f.write(to_write)
+			# to_write = user_tuple[1] + '\t' + city_map.keys()[0] + '\n'
+			# csvfile.write(to_write)
+			writer.writerow({"username":user_tuple[1], "hometown":city_map.keys()[0]})
 		except Exception as e:
 			print "Master error..." + str(e)
 			# pass
@@ -198,10 +199,16 @@ def construct_id_home_mapping(idlist, f):
 if __name__ == "__main__":
 	# check = [(42.375097093, -71.115406025), (42.375097093, -71.115406025), (42.37446105, -71.120158211), (42.374981758, -71.115754964), (42.375273924, -71.115778573), (42.375149103, -71.115834927), (37.619562741, -122.385499283), (42.375440123, -71.115521276), (42.375274299, -71.115690174)]
 	# print len(create_clusters(check))
-	f = open('user_hometowns.txt', 'w')
-	f.write('username\thometown\n')
+	# f = open('user_hometowns.txt', 'w')
+	# f.write('username\thometown\n')
+	csvfile = open("hometowns.csv", "w")
+	fieldnames = ["username", "hometown"]
+	writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+	writer.writeheader()
 	# construct_id_home_mapping(['415272494'], f)
 	idlist = find_users_we_follow()
-	construct_id_home_mapping(idlist[:5], f)
-	f.close()
+	# construct_id_home_mapping(idlist[:5], f)
+	construct_id_home_mapping(idlist[:5], csvfile)
+	# f.close()
+	csvfile.close()
 
