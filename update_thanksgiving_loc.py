@@ -13,6 +13,10 @@ from find_user_location import find_users_we_follow, construct_location_data
 access_token = open("token.txt").read()
 IGapi = InstagramAPI(access_token=access_token)
 
-csvfile = csv.DictReader("hometowns.csv")
-for row in csvfile:
-	print(row)
+def collect_csv_ids(file_):
+	ids = []
+	csvfile = open(file_)
+	reader = csv.DictReader(csvfile)
+	for row in reader:
+		ids.append(row["userid"])
+	return ids
