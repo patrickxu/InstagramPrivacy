@@ -187,15 +187,6 @@ def construct_id_home_mapping(idlist, csvfile):
 			# pass
 	return mapping
 
-# with open('names.csv', 'w') as csvfile:
-#     fieldnames = ['first_name', 'last_name']
-#     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-
-#     writer.writeheader()
-#     writer.writerow({'first_name': 'Baked', 'last_name': 'Beans'})
-#     writer.writerow({'first_name': 'Lovely', 'last_name': 'Spam'})
-#     writer.writerow({'first_name': 'Wonderful', 'last_name': 'Spam'})
-
 if __name__ == "__main__":
 	# check = [(42.375097093, -71.115406025), (42.375097093, -71.115406025), (42.37446105, -71.120158211), (42.374981758, -71.115754964), (42.375273924, -71.115778573), (42.375149103, -71.115834927), (37.619562741, -122.385499283), (42.375440123, -71.115521276), (42.375274299, -71.115690174)]
 	# print len(create_clusters(check))
@@ -208,7 +199,7 @@ if __name__ == "__main__":
 	# construct_id_home_mapping(['415272494'], f)
 	idlist = find_users_we_follow()
 	# construct_id_home_mapping(idlist[:5], f)
-	construct_id_home_mapping(idlist[:5], csvfile)
+	construct_id_home_mapping(idlist, csvfile)
 	# f.close()
 	csvfile.close()
 
