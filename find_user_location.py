@@ -181,7 +181,7 @@ def construct_id_home_mapping(idlist, csvfile):
 			print user_tuple[1], city_map.keys()[0]
 			# to_write = user_tuple[1] + '\t' + city_map.keys()[0] + '\n'
 			# csvfile.write(to_write)
-			writer.writerow({"username":user_tuple[1], "hometown":city_map.keys()[0]})
+			writer.writerow({"username":user_tuple[1], "userid":user_tuple[0], "hometown":city_map.keys()[0]})
 		except Exception as e:
 			print "Master error..." + str(e)
 			# pass
@@ -193,7 +193,7 @@ if __name__ == "__main__":
 	# f = open('user_hometowns.txt', 'w')
 	# f.write('username\thometown\n')
 	csvfile = open("hometowns.csv", "w")
-	fieldnames = ["username", "hometown"]
+	fieldnames = ["username", "userid", "hometown"]
 	writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 	writer.writeheader()
 	# construct_id_home_mapping(['415272494'], f)

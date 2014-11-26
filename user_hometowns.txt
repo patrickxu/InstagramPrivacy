@@ -1,4 +1,0 @@
-username	hometown
-frankiekwuaz	Boston, MA
-danthuyc	Miami, FL
-wharton23	San Francisco, CA
