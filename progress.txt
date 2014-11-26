@@ -3,3 +3,4 @@
 	* TODO: Parse Google's Geolocation JSON response better so it returns city every time...
 * TODO: Create CSV for ID, Username, Hometown
 * TODO: Look through CSV and compare Thanksgiving-day posts to guessed hometown, Cambridge, Boston
+* TODO: Replace all errors returned via printing to Python Exceptions
