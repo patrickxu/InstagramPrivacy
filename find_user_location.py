@@ -5,6 +5,7 @@ from urllib2 import Request, urlopen, URLError
 import json
 from pprint import pprint
 from operator import itemgetter
+import csv
 
 THRESHOLD = .3
 CLIENT_ID = 1570583193
@@ -184,6 +185,15 @@ def construct_id_home_mapping(idlist, f):
 			print "Master error..." + str(e)
 			# pass
 	return mapping
+
+# with open('names.csv', 'w') as csvfile:
+#     fieldnames = ['first_name', 'last_name']
+#     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+#     writer.writeheader()
+#     writer.writerow({'first_name': 'Baked', 'last_name': 'Beans'})
+#     writer.writerow({'first_name': 'Lovely', 'last_name': 'Spam'})
+#     writer.writerow({'first_name': 'Wonderful', 'last_name': 'Spam'})
 
 if __name__ == "__main__":
 	# check = [(42.375097093, -71.115406025), (42.375097093, -71.115406025), (42.37446105, -71.120158211), (42.374981758, -71.115754964), (42.375273924, -71.115778573), (42.375149103, -71.115834927), (37.619562741, -122.385499283), (42.375440123, -71.115521276), (42.375274299, -71.115690174)]
