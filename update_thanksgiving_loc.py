@@ -62,9 +62,9 @@ def find_thanksgiving_address(mapping):
 		city_mapping[id_] = address
 	return city_mapping
 
-def write_updated_location(city_mapping, file):
+# returns a new file with the updated thanksgiving location
+def write_updated_location(city_mapping, input, output):
 	""" writes the thanksgiving location to a new column in the csv """
-	# code code code
 
 if __name__ == "__main__":
 	mapping = sanitize_recent_media("hometowns_to_test.csv")
