@@ -187,22 +187,6 @@ def construct_id_home_mapping(idlist, csvfile):
 			# pass
 	return mapping
 
-"""
-	Parameters: Takes in .txt file that has id, username, hometown tuples
-	Function: Checks to see if user posted over Thanksgiving week, and if so, locations posted
-	Returns: file of id, username, hometown, thanksgiving_location tuples
-"""
-def compare_TG(filename):
-	f = open(filename, 'r')
-	for line in f:
-		split_line = line.split('\r')
-		for l in split_line:
-			lsplit = l.split('\t')
-			if lsplit[0] != "username":
-				username = lsplit[0]
-				hometown = lsplit[1].strip('"')
-				print username, hometown
-		# print ''
 
 if __name__ == "__main__":
 	# check = [(42.375097093, -71.115406025), (42.375097093, -71.115406025), (42.37446105, -71.120158211), (42.374981758, -71.115754964), (42.375273924, -71.115778573), (42.375149103, -71.115834927), (37.619562741, -122.385499283), (42.375440123, -71.115521276), (42.375274299, -71.115690174)]
