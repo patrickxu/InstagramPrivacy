@@ -5,6 +5,7 @@ from urllib2 import Request, urlopen, URLError
 import json
 from pprint import pprint
 from operator import itemgetter
+import csv
 
 THRESHOLD = .3
 CLIENT_ID = 1570583193
@@ -166,7 +167,7 @@ def construct_city_mapping(list_of_clusters):
 	return city_map
 
 # returns a dictionary that maps username to home
-def construct_id_home_mapping(idlist, f):
+def construct_id_home_mapping(idlist, csvfile):
 	""" guesses the hometown for each user and writes info to a txt file """
 	mapping = {}
 	# attempts to make a home guess for each user
@@ -178,8 +179,9 @@ def construct_id_home_mapping(idlist, f):
 			clusters = create_clusters(locations)
 			city_map = construct_city_mapping(clusters)
 			print user_tuple[1], city_map.keys()[0]
-			to_write = user_tuple[1] + '\t' + city_map.keys()[0] + '\n'
-			f.write(to_write)
+			# to_write = user_tuple[1] + '\t' + city_map.keys()[0] + '\n'
+			# csvfile.write(to_write)
+			writer.writerow({"username":user_tuple[1], "userid":user_tuple[0], "hometown":city_map.keys()[0]})
 		except Exception as e:
 			print "Master error..." + str(e)
 			# pass
@@ -207,10 +209,14 @@ if __name__ == "__main__":
 	# print len(create_clusters(check))
 	# f = open('user_hometowns.txt', 'w')
 	# f.write('username\thometown\n')
+	csvfile = open("hometowns.csv", "w")
+	fieldnames = ["username", "userid", "hometown"]
+	writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+	writer.writeheader()
 	# construct_id_home_mapping(['415272494'], f)
-	# idlist = find_users_we_follow()
-	# construct_id_home_mapping(idlist[:2], f)
+	idlist = find_users_we_follow()
+	# construct_id_home_mapping(idlist[:5], f)
+	construct_id_home_mapping(idlist, csvfile)
 	# f.close()
-	compare_TG('user_hometowns.txt')
-
+	csvfile.close()
 
